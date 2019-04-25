@@ -1,0 +1,45 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon ./src/server.js --watch . --exec babel-node",
+    "initdb": "npm run createdb && npm run createschema && npm run loaddata",
+    "createdb": "cross-env psql -f ./database/create_db.sql postgres://localhost:5432/postgres",
+    "createschema": "cross-env psql -f ./database/schema.sql postgres://localhost:5432/hackerbook",
+    "loaddata": "cross-env psql -f ./database/load_data.sql postgres://localhost:5432/hackerbook",
+    "dropdb": "cross-env psql -f ./database/drop_db.sql postgres://localhost:5432/postgres",
+    "dropschema": "cross-env psql -f ./database/drop_schema.sql postgres://localhost:5432/hackerbook"
+  },
+  "keywords": [],
+  "author": "James Moore",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-express": "^1.3.4",
+    "axios": "^0.18.0",
+    "base-64": "^0.1.0",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "dataloader": "^1.4.0",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "graphql": "^0.13.2",
+    "graphql-tools": "^2.23.1",
+    "gravatar": "^1.6.0",
+    "humps": "^2.0.1",
+    "pg": "^7.4.1",
+    "ramda": "^0.25.0",
+    "striptags": "^3.1.1"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "nodemon": "1.17.3",
+    "babel-cli": "^6.26.0",
+    "babel-core": "6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "6.26.0"
+  }
+}
