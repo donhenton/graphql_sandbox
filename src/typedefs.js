@@ -5,6 +5,7 @@ schema {
 }
 type Query {
     books: [Book]
+    findBookById(id: ID!): Book
 }
 
 type Author {

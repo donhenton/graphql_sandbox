@@ -2,6 +2,7 @@ import { map, groupBy } from 'ramda';
 import DataLoader from 'dataloader';
 import query from './db';
 
+/*
 async function findBooksByIds(ids) {
   const sql = `
   select * 
@@ -21,25 +22,19 @@ async function findBooksByIds(ids) {
     throw err;
   }
 }
-
-export function findBooksByIdsLoader() {
-  return new DataLoader(findBooksByIds);
-}
+*/
+ 
 
 export async function findBookById(id) {
-  const sql = `
-  select * 
-  from  book
-  where  book.id = $1;
-  `;
-  const params = [id];
+ 
   try {
-    const result = await query(sql, params);
-    return result.rows[0];
+    const result = await myAllBooks(id);
+    return result[0];
   } catch (err) {
     console.log(err);
     throw err;
   }
+
 }
 
 const ORDER_BY = {
@@ -100,10 +95,13 @@ function dedupe(arr, filterFunction) {
  * then performs a tree assembly, and dedupes the accumulators
  * @returns {bookResult}
  */
-export async function myAllBooks() {
+export async function myAllBooks(id) {
 
+  let parmClause = '';
+  if (id) {
+    parmClause = `where book.id = ${id}`
+  }
 
-  
 
   const sqlReview = `select  
 book.id as book_id, author.id as author_id,review.id as review_id,
@@ -117,7 +115,9 @@ inner join book_author on book.id = book_author.book_id
 inner join author on author.id = book_author.author_id
 inner join review on review.book_id = book.id
 inner join user_list on user_list.id = review.user_id
+${parmClause}
 order by 1,2,3 asc`
+  
 
   try {
     const result = await query(sqlReview);
@@ -129,12 +129,12 @@ order by 1,2,3 asc`
     result.rows.forEach(r => {
       if (currentRow.bookId !== r.bookId) {
         r.authorAccum = [{id: r['authorId'], name: r['authorName']}];
-        r.reviewAccum = [{reviewId: r['reviewId'], rating: r['reviewRating'], user:{id:r['userId'],name:r['userName']}  } ];
+        r.reviewAccum = [{reviewId: r['reviewId'], rating: r['reviewRating'], user: {id: r['userId'], name: r['userName']}}];
         bookResult.push(r);
         currentRow = r;
       }
       currentRow.authorAccum.push({id: r['authorId'], name: r['authorName']});
-      currentRow.reviewAccum.push({reviewId: r['reviewId'], rating: r['reviewRating'], user:{id:r['userId'],name:r['userName'] } });
+      currentRow.reviewAccum.push({reviewId: r['reviewId'], rating: r['reviewRating'], user: {id: r['userId'], name: r['userName']}});
 
     })
 
@@ -143,7 +143,7 @@ order by 1,2,3 asc`
       res.reviewAccum = dedupe(res.reviewAccum, c => c.reviewId)
     })
 
-
+    console.log(bookResult)
     return bookResult;
   } catch (err) {
     console.log(err);

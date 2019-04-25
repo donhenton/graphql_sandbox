@@ -1,4 +1,4 @@
-import {allBooks,myAllBooks,imageUrl} from './book';
+import {allBooks,myAllBooks,imageUrl,findBookById} from './book';
 import {authorsByBookId} from './authors';
 
 const resolvers = {
@@ -17,7 +17,12 @@ const resolvers = {
   Query: {
     books: () => {
       return myAllBooks();
+    },
+    findBookById: (root, args) => {
+      
+      return findBookById(args.id)
     }
+    
   }
 }
 
