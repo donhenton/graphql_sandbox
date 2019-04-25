@@ -109,11 +109,14 @@ export async function myAllBooks() {
 book.id as book_id, author.id as author_id,review.id as review_id,
 author.name as author_name,
 review.rating as review_rating,
- book.* 
+user_list.id as user_id,
+user_list.name as user_name,
+book.* 
 from book
 inner join book_author on book.id = book_author.book_id
 inner join author on author.id = book_author.author_id
 inner join review on review.book_id = book.id
+inner join user_list on user_list.id = review.user_id
 order by 1,2,3 asc`
 
   try {
@@ -126,12 +129,12 @@ order by 1,2,3 asc`
     result.rows.forEach(r => {
       if (currentRow.bookId !== r.bookId) {
         r.authorAccum = [{id: r['authorId'], name: r['authorName']}];
-        r.reviewAccum = [{reviewId: r['reviewId'], rating: r['reviewRating']}];
+        r.reviewAccum = [{reviewId: r['reviewId'], rating: r['reviewRating'], user:{id:r['userId'],name:r['userName']}  } ];
         bookResult.push(r);
         currentRow = r;
       }
       currentRow.authorAccum.push({id: r['authorId'], name: r['authorName']});
-      currentRow.reviewAccum.push({reviewId: r['reviewId'], rating: r['reviewRating']});
+      currentRow.reviewAccum.push({reviewId: r['reviewId'], rating: r['reviewRating'], user:{id:r['userId'],name:r['userName'] } });
 
     })
 

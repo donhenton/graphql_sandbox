@@ -15,10 +15,15 @@ type Author {
 type Review {
   reviewId: ID!
   rating: Int
+  user: User!
 
 }
 
+type User {
+  id: ID!
+  name: String!
 
+}
 type Book {
   id: ID!
   title: String!
