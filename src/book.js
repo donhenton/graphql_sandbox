@@ -70,7 +70,7 @@ export function imageUrl(size, id) {
 /**
  * https://stackoverflow.com/questions/36032179/remove-duplicates-in-an-object-array-javascript
  * @param {type} arr
- * @param {function} filterFunction in the form of p => return p.id
+ * @param {function} filterFunction in the form of p => return p.mainId
  * a function that identifies the 'id' of the row
  * @returns {unresolved}
  */
@@ -94,14 +94,16 @@ function dedupe(arr, filterFunction) {
   }, {temp: [], out: []}).out;
 }
 
+
+/**
+ * this function gets all books author and review information
+ * then performs a tree assembly, and dedupes the accumulators
+ * @returns {bookResult}
+ */
 export async function myAllBooks() {
 
 
-  const sql = `select  author.name as author_name, book.* 
-from book
-inner join book_author on book.id = book_author.book_id
-inner join author on author.id = book_author.author_id
-order by book.id asc`
+  
 
   const sqlReview = `select  
 book.id as book_id, author.id as author_id,review.id as review_id,
