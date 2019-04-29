@@ -20,6 +20,7 @@ app.use(cors());
 
 app.use('/graphql',bodyParser.json(),graphqlExpress({schema}));
 app.use('/graphiql',graphiqlExpress({endpointURL: 'graphql'}));
+app.use('/graphui',graphiqlExpress({endpointURL: 'http://localhost:9000/graphql'}));
 app.listen(4000,() => {console.log("listening on port 4000")});
 
 
